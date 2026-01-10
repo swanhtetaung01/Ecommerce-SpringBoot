@@ -1,6 +1,8 @@
 package com.ecommerce.project.controller;
 
 import com.ecommerce.project.model.Category;
+import com.ecommerce.project.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,17 +12,21 @@ import java.util.List;
 @RequestMapping("/api")
 public class CategoryController {
 
-    private List<Category> categories = new ArrayList<>();
+     private CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/public/categories")
     public List<Category> getAllCategories() {
-        return categories;
+        return categoryService.getAllCategories();
     }
 
     @PostMapping("/public/categories")
     public String createCategory(@RequestBody Category category) {
-        if (category != null) return "Category addition successful";
-        else return "Category addition unsuccessful";
+        categoryService.createCategory(category);
+        return "Category addition successful";
     }
 
 }
