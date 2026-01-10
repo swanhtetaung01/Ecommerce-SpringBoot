@@ -18,6 +18,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(Category category) {
-        categories.add(category);
+        if (categories.isEmpty()) {
+            category.setCategoryId(1L);
+            categories.add(category);
+        }else {
+            category.setCategoryId(categories.getLast().getCategoryId() + 1);
+            categories.add(category);
+        }
     }
 }
