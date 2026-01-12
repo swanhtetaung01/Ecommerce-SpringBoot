@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -43,5 +45,20 @@ public class CategoryServiceImpl implements CategoryService {
 
         categories.remove(category);
         return "Category with categoryId " + categoryId + " is deleted successfully";
+    }
+
+    @Override
+    public String updateCategory(Long categoryId, Category category) {
+        Optional<Category> optionalCategory = categories.stream()
+                .filter(c -> c.getCategoryId().equals(categoryId))
+                .findFirst();
+
+        if (optionalCategory.isPresent()) {
+            optionalCategory.get().setCategoryName(category.getCategoryName());
+            return "Category updated successfully";
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist");
+        }
+
     }
 }
