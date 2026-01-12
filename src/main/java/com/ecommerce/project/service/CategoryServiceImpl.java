@@ -48,18 +48,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Long categoryId, Category category) {
+    public String updateCategory(Long categoryId, Category category) {
         Optional<Category> optionalCategory = categories.stream()
                 .filter(c -> c.getCategoryId().equals(categoryId))
                 .findFirst();
 
         if (optionalCategory.isPresent()) {
-            Category existingCategory =  optionalCategory.get();
-            existingCategory.setCategoryName(category.getCategoryName());
-            category.setCategoryId(categoryId);
-            categories.removeIf( c -> c.getCategoryId() == categoryId);
-            categories.add(existingCategory);
+            optionalCategory.get().setCategoryName(category.getCategoryName());
+            return "Category updated successfully";
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist");
         }
-        return null;
+
     }
 }
