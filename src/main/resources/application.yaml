@@ -1,3 +1,6 @@
 spring:
   application:
     name: springboot-ecomm
+  h2:
+    console:
+      enabled: true
