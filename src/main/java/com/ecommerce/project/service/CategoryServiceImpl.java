@@ -52,7 +52,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .findFirst();
 
         if (optionalCategory.isPresent()) {
-            optionalCategory.get().setCategoryName(category.getCategoryName());
+            Category updatedCategory = optionalCategory.get();
+            updatedCategory.setCategoryName(category.getCategoryName());
+            categoryRepository.save(updatedCategory);
             return "Category updated successfully";
         }else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist");
