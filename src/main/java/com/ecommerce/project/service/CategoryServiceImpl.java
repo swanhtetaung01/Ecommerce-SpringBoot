@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +14,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     // private List<Category> categories = new ArrayList<>();
-    //private Long nextId = 1L;
+//    private Long nextId = 1L;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -28,15 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(Category category) {
-        if (categoryRepository.findAll().isEmpty()) {
-            category.setCategoryId(1L);
-            categoryRepository.save(category);
-        }else {
-            category.setCategoryId(categoryRepository.findAll().getLast().getCategoryId() + 1);
-            categoryRepository.save(category);
-        }
-//        category.setCategoryId(nextId++);
-//        categories.add(category);
+        category.setCategoryId(null);
+        categoryRepository.save(category);
     }
 
     @Override
