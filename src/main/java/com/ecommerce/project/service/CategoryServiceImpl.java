@@ -4,6 +4,7 @@ import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -12,9 +13,6 @@ import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-
-    // private List<Category> categories = new ArrayList<>();
-//    private Long nextId = 1L;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -32,33 +30,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public String deleteCategory(Long categoryId) {
-         List<Category> categories = categoryRepository.findAll();
-        Category category = categories.stream()
-                .filter(c -> c.getCategoryId().equals(categoryId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Category with categoryId "
-                                + categoryId + " is not found"));
-
-        categoryRepository.delete(category);
+         Category targetCategory = categoryRepository.findById(categoryId)
+                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND , "Category does not exist"));
+         categoryRepository.delete(targetCategory);
         return "Category with categoryId " + categoryId + " is deleted successfully";
     }
 
     @Override
     public String updateCategory(Long categoryId, Category category) {
-        List<Category> categories = categoryRepository.findAll();
-        Optional<Category> optionalCategory = categories.stream()
-                .filter(c -> c.getCategoryId().equals(categoryId))
-                .findFirst();
-
-        if (optionalCategory.isPresent()) {
-            Category updatedCategory = optionalCategory.get();
-            updatedCategory.setCategoryName(category.getCategoryName());
-            categoryRepository.save(updatedCategory);
-            return "Category updated successfully";
-        }else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist");
-        }
-
+        Category updatedCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist"));
+        updatedCategory.setCategoryName(category.getCategoryName());
+        categoryRepository.save(updatedCategory);
+        return "Category updated successfully";
     }
 }
