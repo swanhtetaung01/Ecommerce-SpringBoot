@@ -37,7 +37,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String updateCategory(Long categoryId, Category category) {
         Category updatedCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist"));
         updatedCategory.setCategoryName(category.getCategoryName());
         categoryRepository.save(updatedCategory);
         return "Category updated successfully";
