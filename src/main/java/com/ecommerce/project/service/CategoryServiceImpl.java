@@ -1,11 +1,12 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exceptions.APIException;
+import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,14 +23,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(Category category) {
-        category.setCategoryId(null);
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if (savedCategory != null)
+            throw new APIException("Category with name:"
+                    + savedCategory.getCategoryName() + " already exists");
         categoryRepository.save(category);
     }
 
     @Override
     public String deleteCategory(Long categoryId) {
          Category targetCategory = categoryRepository.findById(categoryId)
-                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND , "Category does not exist"));
+                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
          categoryRepository.delete(targetCategory);
         return "Category with categoryId " + categoryId + " is deleted successfully";
     }
@@ -37,8 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String updateCategory(Long categoryId, Category category) {
         Category updatedCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         updatedCategory.setCategoryName(category.getCategoryName());
         categoryRepository.save(updatedCategory);
         return "Category updated successfully";
