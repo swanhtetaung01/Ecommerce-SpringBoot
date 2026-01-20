@@ -1,6 +1,7 @@
 package com.ecommerce.project.service;
 
 import com.ecommerce.project.exceptions.APIException;
+import com.ecommerce.project.exceptions.EmptyCategoryException;
 import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
@@ -18,6 +19,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllCategories() {
+        if (categoryRepository.findAll() == null) {
+            throw new EmptyCategoryException("No category added yet");
+        }
         return categoryRepository.findAll();
     }
 
