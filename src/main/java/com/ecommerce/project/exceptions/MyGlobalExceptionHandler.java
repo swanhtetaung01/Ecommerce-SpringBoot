@@ -35,10 +35,4 @@ public class MyGlobalExceptionHandler {
         String message = e.getMessage();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(EmptyCategoryException.class)
-    public ResponseEntity<String> myEmptyCategoryException(EmptyCategoryException e) {
-        String message = e.getMessage();
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-    }
 }               
