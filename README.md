@@ -78,4 +78,6 @@ springboot-ecomm/
 └── mvnw                         # Maven Wrapper
 ```
 
+## License
+- TODO: Add license information.
 
