@@ -50,4 +50,9 @@ public class ProductServiceImpl implements ProductService{
         productResponse.setContent(productDTOS);
         return productResponse;
     }
+
+    @Override
+    public ProductResponse getProductsByCategory(Long categoryId) {
+        return ;
+    };
 }
