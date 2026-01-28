@@ -23,7 +23,7 @@ public class Category {
     @Size(min = 5, message = "Category name must contain at least 5 characters")
     private String categoryName;
 
-//    @OneToMany(mappedBy = "category")
-//    @JsonIgnore
-//    private List<Product> products;
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
+    private List<Product> products;
 }
