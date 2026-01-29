@@ -26,11 +26,11 @@ public class ProductServiceImpl implements ProductService{
     private ModelMapper modelMapper;
 
     @Override
-    public ProductDTO addProduct(Long categoryId, Product product) {
+    public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Category", "categoryId", categoryId));
-
+        Product product = modelMapper.map(productDTO, Product.class);
         product.setImage("default.png");
         product.setCategory(category);
         double specialPrice = product.getPrice() -
@@ -75,5 +75,28 @@ public class ProductServiceImpl implements ProductService{
         return productResponse;
     }
 
-    ;
+    @Override
+    public ProductDTO updateProduct(ProductDTO productDTO, Long productId) {
+        Product targetProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+        Product product = modelMapper.map(productDTO, Product.class);
+        targetProduct.setProductName(product.getProductName());
+        targetProduct.setDescription(product.getDescription());
+        targetProduct.setQuantity(product.getQuantity());
+        targetProduct.setPrice(product.getPrice());
+        targetProduct.setDiscount(product.getDiscount());
+        Double specialPrice = product.getPrice() - (product.getPrice() * (product.getDiscount() * 0.01));
+        targetProduct.setSpecialPrice(specialPrice);
+        Product updatedProduct = productRepository.save(targetProduct);
+        return modelMapper.map(updatedProduct, ProductDTO.class);
+    }
+
+    @Override                                              
+    public String deleteProduct(Long productId) {
+        Product targetProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+        productRepository.deleteById(productId);
+        return "Product is deleted successfully";
+    }
+
 }
