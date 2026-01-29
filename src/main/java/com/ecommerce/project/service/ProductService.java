@@ -14,4 +14,6 @@ public interface ProductService {
     ProductResponse getProductsByKeyword(String keyword);
 
     ProductDTO updateProduct(Product product, Long productId);
+
+    String deleteProduct(Long productId);
 }
