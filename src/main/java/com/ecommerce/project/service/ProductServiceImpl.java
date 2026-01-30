@@ -11,6 +11,10 @@ import com.ecommerce.project.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,8 +67,14 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductResponse getAllProducts() {
-        List<Product> products = productRepository.findAll();
+    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
+                                          String sortBy, String sortOrder) {
+        Sort sortDetails = sortOrder.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortDetails);
+        Page<Product> productPage = productRepository.findAll(pageDetails);
+        List<Product> products = productPage.getContent();
         if(products.isEmpty())
             throw new APIException("No product added yet");
         List<ProductDTO> productDTOS = products.stream()
@@ -72,6 +82,11 @@ public class ProductServiceImpl implements ProductService{
                 .toList();
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(pageNumber);
+        productResponse.setPageSize(pageSize);
+        productResponse.setTotalElements(productPage.getTotalElements());
+        productResponse.setTotalPages(productPage.getTotalPages());
+        productResponse.setLastPage(productPage.isLast());
         return productResponse;
     }
 
