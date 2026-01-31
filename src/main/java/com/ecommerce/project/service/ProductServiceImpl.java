@@ -8,6 +8,7 @@ import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.payload.ProductResponse;
 import com.ecommerce.project.repository.CategoryRepository;
 import com.ecommerce.project.repository.ProductRepository;
+import org.jspecify.annotations.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private PaginationService paginationService;
 
     @Value("${project.image}")
     private String path;
@@ -69,14 +73,43 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
                                           String sortBy, String sortOrder) {
-        Sort sortDetails = sortOrder.equalsIgnoreCase("asc") ?
-                Sort.by(sortBy).ascending() :
-                Sort.by(sortBy).descending();
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortDetails);
+        Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
         Page<Product> productPage = productRepository.findAll(pageDetails);
         List<Product> products = productPage.getContent();
         if(products.isEmpty())
             throw new APIException("No product added yet");
+        return getProductResponse(pageNumber, pageSize, productPage, products);
+    }
+
+    @Override
+    public ProductResponse getProductsByCategory(Integer pageNumber, Integer pageSize,
+                                                 String sortBy, String sortOrder,
+                                                 Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+        Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
+        Page<Product> productPage = productRepository.findByCategoryOrderByPriceAsc(category, pageDetails);
+        List<Product> products = productPage.getContent();
+        if(products.isEmpty())
+            throw new APIException("No product added under category name: "+ category.getCategoryName());
+        return getProductResponse(pageNumber, pageSize, productPage, products);
+    }
+
+    @Override
+    public ProductResponse getProductsByKeyword(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword) {
+        Sort sortDetails = sortBy.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+        Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
+        Page<Product> productPage = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageDetails);
+        List<Product> products = productPage.getContent();
+        if(products.isEmpty())
+            throw new APIException("No product found under keyword: " + keyword);
+        return getProductResponse(pageNumber, pageSize, productPage, products);
+    }
+
+    @NonNull
+    private ProductResponse getProductResponse(Integer pageNumber, Integer pageSize, Page<Product> productPage, List<Product> products) {
         List<ProductDTO> productDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
@@ -87,34 +120,6 @@ public class ProductServiceImpl implements ProductService{
         productResponse.setTotalElements(productPage.getTotalElements());
         productResponse.setTotalPages(productPage.getTotalPages());
         productResponse.setLastPage(productPage.isLast());
-        return productResponse;
-    }
-
-    @Override
-    public ProductResponse getProductsByCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-        List<Product> products = productRepository.findByCategoryOrderByPriceAsc(category);
-        if(products.isEmpty())
-            throw new APIException("No product added under category name: "+ category.getCategoryName());
-        List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
-                .toList();
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
-        return productResponse;
-    }
-
-    @Override
-    public ProductResponse getProductsByKeyword(String keyword) {
-        List<Product> products = productRepository.findByProductNameLikeIgnoreCase( '%' + keyword + '%');
-        if(products.isEmpty())
-            throw new APIException("No product found under keyword: " + keyword);
-        List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
-                .toList();
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
         return productResponse;
     }
 

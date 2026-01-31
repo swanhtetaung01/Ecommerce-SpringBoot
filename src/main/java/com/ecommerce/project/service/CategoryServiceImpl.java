@@ -25,13 +25,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private PaginationService paginationService;
+
     @Override
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize,
                                              String sortBy, String sortOrder) {
-        Sort sortDetails = sortOrder.equalsIgnoreCase("asc") ?
-                Sort.by(sortBy).ascending() :
-                Sort.by(sortBy).descending();
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortDetails);
+        Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
         Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
         List<Category> categories = categoryPage.getContent();
         if (categories.isEmpty())
