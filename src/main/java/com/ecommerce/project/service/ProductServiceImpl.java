@@ -91,10 +91,17 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductResponse getProductsByCategory(Long categoryId) {
+    public ProductResponse getProductsByCategory(Integer pageNumber, Integer pageSize,
+                                                 String sortBy, String sortOrder,
+                                                 Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-        List<Product> products = productRepository.findByCategoryOrderByPriceAsc(category);
+        Sort sortDetails = sortBy.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortDetails);
+        Page<Product> productPage = productRepository.findByCategoryOrderByPriceAsc(category, pageDetails);
+        List<Product> products = productPage.getContent();
         if(products.isEmpty())
             throw new APIException("No product added under category name: "+ category.getCategoryName());
         List<ProductDTO> productDTOS = products.stream()
@@ -102,6 +109,11 @@ public class ProductServiceImpl implements ProductService{
                 .toList();
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(pageNumber);
+        productResponse.setPageSize(pageSize);
+        productResponse.setTotalElements(productPage.getTotalElements());
+        productResponse.setTotalPages(productPage.getTotalPages());
+        productResponse.setLastPage(productPage.isLast());
         return productResponse;
     }
 
