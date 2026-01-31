@@ -13,7 +13,7 @@ public interface ProductService {
 
     ProductResponse getProductsByCategory(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, Long categoryId);
 
-    ProductResponse getProductsByKeyword(String keyword);
+    ProductResponse getProductsByKeyword(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword);
 
     ProductDTO updateProduct(ProductDTO productDTO, Long productId);
 
