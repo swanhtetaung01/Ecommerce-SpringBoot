@@ -35,4 +35,8 @@ public class Product {
     @JoinColumn(name = "category_Id")
     @JsonIgnore
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User user;
 }
