@@ -7,8 +7,8 @@ spring.datasource.password=
 
 project.image=images/
 
-spring.app.jwtSecret=
-spring.app.jwtExpiration=
+spring.app.jwtSecretKey=
+spring.app.jwtExpirationMs=
 
 logger.level.org.springframework=DEBUG
 logger.level.org.hibernate.SQL=DEBUG
