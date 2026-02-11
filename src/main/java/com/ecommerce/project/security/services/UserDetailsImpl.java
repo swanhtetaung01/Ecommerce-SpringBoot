@@ -26,7 +26,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @JsonIgnore
     private String password;
-    
+
     private Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(Integer id, String username, String email, String password,
@@ -88,9 +88,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+        if (this == o)
             return true;
-        if(o == null || getClass() != o.getClass())
+        if (o == null || getClass() != o.getClass())
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
