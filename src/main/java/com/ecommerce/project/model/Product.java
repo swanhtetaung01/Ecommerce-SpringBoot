@@ -18,7 +18,7 @@ import lombok.ToString;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long productId;
+    private Integer productId;
 
     @NotBlank
     @Size(min = 3, message = "Product name must contain at least 3 characters")
