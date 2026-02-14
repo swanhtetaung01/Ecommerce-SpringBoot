@@ -41,7 +41,8 @@ public class WebSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-    
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
         return authConfig.getAuthenticationManager();
     }
@@ -82,4 +83,5 @@ public class WebSecurityConfig {
                 "/webjars/**"
         ));
     }
+
 }
