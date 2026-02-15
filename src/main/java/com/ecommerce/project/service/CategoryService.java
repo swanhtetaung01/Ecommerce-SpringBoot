@@ -9,7 +9,7 @@ public interface CategoryService {
 
     CategoryDTO createCategory(CategoryDTO categoryDTO);
 
-    CategoryDTO deleteCategory(Long categoryId);
+    CategoryDTO deleteCategory(Integer categoryId);
 
-    CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO);
+    CategoryDTO updateCategory(Integer categoryId, CategoryDTO categoryDTO);
 }
