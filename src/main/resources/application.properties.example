@@ -9,6 +9,7 @@ project.image=images/
 
 spring.app.jwtSecretKey=
 spring.app.jwtExpirationMs=
+spring.app.jwtCookie=
 
 logger.level.org.springframework=DEBUG
 logger.level.org.hibernate.SQL=DEBUG
