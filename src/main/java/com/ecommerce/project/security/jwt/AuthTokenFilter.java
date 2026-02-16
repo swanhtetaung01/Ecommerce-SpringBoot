@@ -34,7 +34,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
         try {
-            String jwtToken = jwtUtils.generateJwtTokenFromHeader(request);
+            String jwtToken = jwtUtils.generateJwtFromCookies(request);
             if (jwtToken != null && jwtUtils.validateJwtToken(jwtToken)) {
                 String username = jwtUtils.generateUsernameFromJwtToken(jwtToken);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
