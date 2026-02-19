@@ -24,7 +24,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_Id")
-    private Integer userId;
+    private Long userId;
 
     @NotBlank
     @Size(max = 20)
