@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService{
     private String path;
 
     @Override
-    public ProductDTO addProduct(Integer categoryId, ProductDTO productDTO) {
+    public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Category", "categoryId", categoryId));
@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponse getProductsByCategory(Integer pageNumber, Integer pageSize,
                                                  String sortBy, String sortOrder,
-                                                 Integer categoryId) {
+                                                 Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
@@ -123,7 +123,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDTO updateProduct(ProductDTO productDTO, Integer productId) {
+    public ProductDTO updateProduct(ProductDTO productDTO, Long productId) {
         Product targetProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
         Product product = modelMapper.map(productDTO, Product.class);
@@ -139,7 +139,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override                                              
-    public String deleteProduct(Integer productId) {
+    public String deleteProduct(Long productId) {
         Product targetProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
         productRepository.deleteById(productId);
@@ -147,7 +147,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDTO updateProductImage(MultipartFile image, Integer productId) throws IOException {
+    public ProductDTO updateProductImage(MultipartFile image, Long productId) throws IOException {
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
         String fileName = fileService.uploadImage(path, image);
