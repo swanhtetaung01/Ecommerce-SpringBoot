@@ -10,6 +10,7 @@ import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
 import com.ecommerce.project.repositories.ProductRepository;
+import com.ecommerce.project.util.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,17 +55,25 @@ public class CartServiceImpl implements CartService {
                 productId,
                 cart.getCartId()
                 );
-        if(cartItem != null && product.getQuantity() != 0){
+
+        if (cartItem == null) {
+            cartItem = new CartItem();
+            cartItem.setQuantity(quantity);
+            cartItem.setCart(cart);
+            cart.getCartItems().add(cartItem);
+        } else {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         }
-        cartItem.setQuantity(quantity);
+
+        // Always sync product and pricing details
         cartItem.setProduct(product);
         cartItem.setProductPrice(product.getPrice());
         cartItem.setDiscount(product.getDiscount());
-        cartItem.setCart(cart);
 
         cartItemRepository.save(cartItem);
-        product.setQuantity(product.getQuantity());
+
+        product.setQuantity(product.getQuantity() - quantity);
+        productRepository.save(product);
 
         cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
         cartRepository.save(cart);
@@ -81,7 +90,7 @@ public class CartServiceImpl implements CartService {
         return cartDTO;
     }
     private Cart getCart(){
-        Cart userCart = cartRepository.findCartByEmail(authUtil.loggedInEmail());
+        Cart userCart = cartRepository.findCartByEmail(authUtil.loggedInUserEmail());
         if(userCart != null)
             return userCart;
         Cart newCart = new Cart();
