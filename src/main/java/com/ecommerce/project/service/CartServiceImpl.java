@@ -11,13 +11,12 @@ import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
 import com.ecommerce.project.repositories.ProductRepository;
 import com.ecommerce.project.util.AuthUtil;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -120,6 +119,12 @@ public class CartServiceImpl implements CartService {
             modelMapper.map(cartItem.getProduct(), ProductDTO.class)).toList();
         cartDTO.setProducts(products);
         return cartDTO;
+    }
+
+    @Override
+    @Transactional
+    public CartDTO updateProductQuantityInCart(Long productId, int delete) {
+        return null;
     }
 
     private Cart getCart(){
