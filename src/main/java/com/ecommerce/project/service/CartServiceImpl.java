@@ -37,6 +37,7 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public CartDTO addProductToCart(Long productId, Integer quantity) {
 
@@ -142,13 +143,20 @@ public class CartServiceImpl implements CartService {
         if(cartItem == null) {
             throw new APIException("Product" + product.getProductName() + " is not available in the cart");
         }
-        cartItem.setProduct(product);
-        cartItem.setProductPrice(product.getSpecialPrice());
-        cartItem.setQuantity(cartItem.getQuantity() + quantity);
-        cartItem.setDiscount(product.getDiscount());
 
-        cart.setTotalPrice(cart.getTotalPrice() + (cartItem.getProductPrice() * quantity));
-        cartRepository.save(cart);
+        int newQuantity = cartItem.getQuantity() + quantity;
+        if(newQuantity < 0)
+            throw new APIException("The resulting quantity cannot be negative");
+        else if (newQuantity == 0)
+            deleteProductFromCart(cart.getCartId(), productId);
+        else {
+            cartItem.setProduct(product);
+            cartItem.setProductPrice(product.getSpecialPrice());
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            cartItem.setDiscount(product.getDiscount());
+            cart.setTotalPrice(cart.getTotalPrice() + (cartItem.getProductPrice() * quantity));
+            cartRepository.save(cart);
+        }
 
         CartItem updatedCartItem = cartItemRepository.save(cartItem);
         if(updatedCartItem.getQuantity() == 0) {
@@ -165,6 +173,7 @@ public class CartServiceImpl implements CartService {
         return cartDTO;
     }
 
+    @Transactional
     @Override
     public String deleteProductFromCart(Long cartId, Long productId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
@@ -175,7 +184,7 @@ public class CartServiceImpl implements CartService {
 
         cart.setTotalPrice(cart.getTotalPrice() - (cartItem.getProductPrice() * cartItem.getQuantity()));
         cartItemRepository.deleteCartItemByProductIdAndCartId(productId, cartId);
-        return "Product " + cartItem.getProduct().getProductName() + "removed from the cart";
+        return "Product: " + cartItem.getProduct().getProductName() + " is removed from the cart";
     }
 
     private Cart getCart(){
