@@ -32,7 +32,7 @@ public class AddressController {
     @GetMapping("/addresses")
     public ResponseEntity<List<AddressDTO>> getAllAddresses() {
         List<AddressDTO> addressDTOs = addressService.getAllAddresses();
-        return new ResponseEntity<List<AddressDTO>>(addressDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(addressDTOs, HttpStatus.OK);
     }
 
     @GetMapping("/addresses/{addressId}")
@@ -42,9 +42,15 @@ public class AddressController {
     }
 
     @GetMapping("/users/addresses")
-    public ResponseEntity<List<AddressDTO>> getAddressByUser() {
+    public ResponseEntity<List<AddressDTO>> getUserAddresses() {
         User user = authUtil.loggedInUser();
         List<AddressDTO> addressDTOs = addressService.getUserAddresses(user);
         return new ResponseEntity<>(addressDTOs, HttpStatus.OK);
+    }
+
+    @PutMapping("/addresses/{addressId}")
+    public ResponseEntity<AddressDTO> updateAddress(@PathVariable Long addressId,@Valid @RequestBody AddressDTO addressDTO) {
+        AddressDTO updatedAddressDTO = addressService.updateAddress(addressId, addressDTO);
+        return new ResponseEntity<>(updatedAddressDTO, HttpStatus.OK);
     }
 }
