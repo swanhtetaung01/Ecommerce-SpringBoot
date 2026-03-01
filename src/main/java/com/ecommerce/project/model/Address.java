@@ -43,7 +43,7 @@ public class Address {
     private String country;
 
     @NotBlank
-    @Size(min = 6, message = "Pin code must be 6 characters")
+    @Size(min = 5, message = "Zip code must be 6 characters")
     private String zipCode;
 
     @ToString.Exclude
