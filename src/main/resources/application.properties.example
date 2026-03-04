@@ -4,6 +4,8 @@ spring.datasource.url=
 spring.datasource.username=
 spring.datasource.password=
 
+server.port=
+
 project.image=images/
 
 spring.app.jwtSecretKey=
