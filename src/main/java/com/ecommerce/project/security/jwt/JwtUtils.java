@@ -35,6 +35,7 @@ public class JwtUtils {
 
     public SecretKey key() { return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretKey)); }
 
+    //For cookie-based authentication
     public String generateJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
         if(cookie != null) {
@@ -56,6 +57,14 @@ public class JwtUtils {
         return ResponseCookie.from(jwtCookie, null)
                 .path("/api")
                 .build();
+    }
+
+    public String generateJwtFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     public String generateJwtTokenFromUsername(UserDetailsImpl userDetails) {
