@@ -20,7 +20,7 @@ import java.util.List;
 @ToString
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
     @NotBlank
