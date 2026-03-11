@@ -1,83 +1,133 @@
-# Spring Boot Ecommerce Project
+# Spring Boot E-Commerce Project 🛒
 
-## Overview
-A RESTful e-commerce backend built with Spring Boot. Currently, it provides functionality for managing product categories with support for pagination, sorting, and validation.
+A robust and scalable e-commerce backend built with **Spring Boot**, **Spring Security**, and **JWT Authentication**. This project provides a full-featured REST API for managing categories, products, carts, orders, and user addresses.
 
-## Tech Stack
-- **Language:** Java 21
-- **Framework:** Spring Boot 4.0.1
-- **Build Tool:** Maven
-- **Database:** H2 (In-memory)
-- **Mapping:** ModelMapper
-- **Utilities:** Lombok, Spring Data JPA, Spring Validation
+---
 
-## Requirements
-- JDK 21 or higher
-- Maven (optional, wrapper provided)
+## 🏗️ Project Overview
 
-## Setup and Run
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd springboot-ecomm
-   ```
-2. **Build the project:**
-   ```bash
-   ./mvnw clean install
-   ```
-3. **Run the application:**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-   The server will start at `http://localhost:8080`.
+This repository contains the backend implementation for an e-commerce platform. It leverages modern Java technologies and industry-standard security practices to deliver a secure and efficient shopping experience.
 
-## Scripts
-- `./mvnw clean install`: Build and install dependencies.
-- `./mvnw spring-boot:run`: Launch the application.
-- `./mvnw test`: Run unit and integration tests.
+### 🎥 Database ER Diagram
+The following diagram illustrates the entity-relationship structure of the database:
 
-## API Endpoints (Current)
-- `GET /api/public/categories`: Fetch all categories (paginated).
-- `POST /api/public/categories`: Create a new category.
-- `PUT /api/admin/categories/{categoryId}`: Update an existing category.
-- `DELETE /api/admin/categories/{categoryId}`: Remove a category.
+![E-Commerce ER Diagram](docs/ecommerce-er-diagram.png)
 
-## Database Console
-Access the H2 Console at `http://localhost:8080/h2-console` with:
-- **JDBC URL:** `jdbc:h2:mem:test`
-- **Username:** `sa` (default)
-- **Password:** (leave empty)
+---
 
-## Environment Variables
-- TODO: List any externalized configuration variables (currently using defaults in `application.yaml`).
+## 🚀 Key Features
 
-## Tests
-Run tests using:
-```bash
-./mvnw test
-```
+- **User Authentication & Authorization**: Secure login and signup using JWT (JSON Web Tokens) and Spring Security.
+- **Role-Based Access Control**: Different permissions for `USER` and `ADMIN` roles.
+- **Category Management**: Create, read, update, and delete product categories.
+- **Product Management**: Comprehensive product catalog with image support and pagination.
+- **Shopping Cart**: Add, remove, and update items in a persistent shopping cart.
+- **Order Processing**: Place orders and track order history.
+- **Address Management**: Users can manage multiple delivery addresses.
+- **Validation**: Strict data validation using `spring-boot-starter-validation`.
+- **API Documentation**: Integrated Swagger UI for easy API exploration and testing.
 
-## Project Structure
+---
+
+## 🛠️ Tech Stack
+
+- **Java 21**: The latest LTS version of the Java programming language.
+- **Spring Boot 4.0.1**: Core framework for building the RESTful API.
+- **Spring Security & JWT**: Security layer for authentication and stateless session management.
+- **Spring Data JPA**: Persistence layer using Hibernate as the ORM.
+- **MySQL**: Relational database for storing application data.
+- **ModelMapper**: For mapping between DTOs (Data Transfer Objects) and Entities.
+- **Lombok**: To reduce boilerplate code (Getters, Setters, Constructors, etc.).
+- **SpringDoc (Swagger)**: API documentation and interactive UI.
+- **Maven**: Dependency management and build tool.
+
+---
+
+## 📂 Project Structure
+
 ```text
 springboot-ecomm/
+├── docs/                      # Project documentation and ER diagrams
+│   └── ecommerce-er-diagram.png
+├── images/                    # Storage for product and profile images
 ├── src/
 │   ├── main/
 │   │   ├── java/com/ecommerce/project/
-│   │   │   ├── config/          # Configuration classes (AppConfig, AppConstants)
-│   │   │   ├── controller/      # REST Controllers
-│   │   │   ├── exceptions/      # Global Exception Handling
-│   │   │   ├── model/           # JPA Entities
-│   │   │   ├── payload/         # DTOs (Data Transfer Objects)
-│   │   │   ├── repository/      # Spring Data Repositories
-│   │   │   ├── service/         # Business Logic Layer
-│   │   │   └── SpringbootEcommApplication.java # Main Entry Point
+│   │   │   ├── config/        # Configuration classes (App, ModelMapper, etc.)
+│   │   │   ├── controller/    # REST Controllers for handling API requests
+│   │   │   ├── exceptions/    # Global exception handling and custom exceptions
+│   │   │   ├── model/         # JPA Entities representing database tables
+│   │   │   ├── payload/       # DTOs (Request/Response objects)
+│   │   │   ├── repositories/  # Spring Data JPA repositories
+│   │   │   ├── security/      # Security config, JWT filters, and services
+│   │   │   ├── service/       # Business logic implementations
+│   │   │   └── util/          # Utility classes
 │   │   └── resources/
-│   │       └── application.yaml # Application Configuration
-│   └── test/                    # Unit and Integration Tests
-├── pom.xml                      # Maven Configuration
-└── mvnw                         # Maven Wrapper
+│   │       ├── static/        # Static assets
+│   │       ├── templates/     # View templates (if applicable)
+│   │       └── application.properties # Main application configuration
+│   └── test/                  # Unit and integration tests
+├── pom.xml                    # Maven project configuration
+└── README.md                  # Project documentation
 ```
 
-## License
-- TODO: Add license information.
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
+- JDK 21
+- Maven 3.x
+- MySQL Server
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/your-username/springboot-ecomm.git
+cd springboot-ecomm
+```
+
+### Step 2: Configure Database
+1. Open MySQL and create a database named `ecommerce`.
+2. Update `src/main/resources/application.properties` with your MySQL credentials:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+```
+
+### Step 3: Build and Run
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+The server will start on `http://localhost:5000` (as configured in `application.properties`).
+
+---
+
+## 📖 API Documentation
+
+Once the application is running, you can access the interactive Swagger documentation at:
+
+🔗 [http://localhost:5000/swagger-ui/index.html](http://localhost:5000/swagger-ui/index.html)
+
+This provides a detailed list of all endpoints, request bodies, and authentication requirements.
+
+---
+
+## 🛣️ Main Endpoints
+
+| Category | Endpoints |
+| :--- | :--- |
+| **Auth** | `/api/auth/signin`, `/api/auth/signup` |
+| **Categories** | `/api/public/categories`, `/api/admin/categories` |
+| **Products** | `/api/public/products`, `/api/admin/products` |
+| **Cart** | `/api/carts` |
+| **Orders** | `/api/users/payments` |
+| **Address** | `/api/addresses` |
+
+---
+
+## 📝 License
+
+This project is open-source and available under the MIT License.
 
