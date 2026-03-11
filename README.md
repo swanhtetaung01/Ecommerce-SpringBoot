@@ -35,7 +35,7 @@ The following diagram illustrates the entity-relationship structure of the datab
 - **Spring Boot 4.0.1**: Core framework for building the RESTful API.
 - **Spring Security & JWT**: Security layer for authentication and stateless session management.
 - **Spring Data JPA**: Persistence layer using Hibernate as the ORM.
-- **MySQL**: Relational database for storing application data.
+- **MySQL/PostgreSQL**: Relational database for storing application data.
 - **ModelMapper**: For mapping between DTOs (Data Transfer Objects) and Entities.
 - **Lombok**: To reduce boilerplate code (Getters, Setters, Constructors, etc.).
 - **SpringDoc (Swagger)**: API documentation and interactive UI.
@@ -78,7 +78,7 @@ springboot-ecomm/
 ### Prerequisites
 - JDK 21
 - Maven 3.x
-- MySQL Server
+- MySQL/PostgreSQL
 
 ### Step 1: Clone the Repository
 ```bash
@@ -87,10 +87,10 @@ cd springboot-ecomm
 ```
 
 ### Step 2: Configure Database
-1. Open MySQL and create a database named `ecommerce`.
+1. Open MySQL or PostgreSQL and create a database named `ecommerce`.
 2. Update `src/main/resources/application.properties` with your MySQL credentials:
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce
+spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce   //can change for PostgreSQL
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 ```
