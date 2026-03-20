@@ -74,6 +74,7 @@ public class WebSecurityConfig {
                         authRequests.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/carts").hasAuthority(AppRole.ROLE_ADMIN.name())
                                 //.requestMatchers("/api/public/**").permitAll()
                                 //.requestMatchers("/api/admin/**").permitAll()

@@ -12,6 +12,8 @@ spring.app.jwtSecretKey=
 spring.app.jwtExpirationMs=
 spring.app.jwtCookie=
 
+management.endpoints.web.exposure.include=
+
 logger.level.org.springframework=DEBUG
 logger.level.org.hibernate.SQL=DEBUG
 logger.level.org.springframework.security=DEBUG
