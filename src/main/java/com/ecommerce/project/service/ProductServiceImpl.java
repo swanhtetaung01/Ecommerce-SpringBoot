@@ -79,22 +79,30 @@ public class ProductServiceImpl implements ProductService{
         }
     }
 
+//    @Override
+//    @Cacheable(
+//            value = "PRODUCTS",
+//            key = "#pageNumber + '_' + #pageSize + '_' + #sortBy + '_' + #sortOrder"
+//    )
+//    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
+//                                          String sortBy, String sortOrder) {
+//
+//        System.out.println("Fetching from DB (NOT CACHE)");
+//
+//        Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
+//        Page<Product> productPage = productRepository.findAll(pageDetails);
+//        List<Product> products = productPage.getContent();
+//        if(products.isEmpty())
+//            throw new APIException("No product added yet");
+//        return getProductResponse(pageNumber, pageSize, productPage, products);
+//    }
+
     @Override
-    @Cacheable(
-            value = "PRODUCTS",
-            key = "#pageNumber + '_' + #pageSize + '_' + #sortBy + '_' + #sortOrder"
-    )
-    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
-                                          String sortBy, String sortOrder) {
-
-        System.out.println("Fetching from DB (NOT CACHE)");
-
-        Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
-        Page<Product> productPage = productRepository.findAll(pageDetails);
-        List<Product> products = productPage.getContent();
+    public List<Product> getAllProducts() {
+        List<Product> products = productRepository.findAll();
         if(products.isEmpty())
             throw new APIException("No product added yet");
-        return getProductResponse(pageNumber, pageSize, productPage, products);
+        return products.stream().toList();
     }
 
     @Override
