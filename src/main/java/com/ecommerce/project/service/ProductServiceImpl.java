@@ -15,6 +15,7 @@ import org.jspecify.annotations.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -79,8 +80,15 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Cacheable(
+            value = "PRODUCTS",
+            key = "#pageNumber + '_' + #pageSize + '_' + #sortBy + '_' + #sortOrder"
+    )
     public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
                                           String sortBy, String sortOrder) {
+
+        System.out.println("Fetching from DB (NOT CACHE)");
+
         Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
         Page<Product> productPage = productRepository.findAll(pageDetails);
         List<Product> products = productPage.getContent();
