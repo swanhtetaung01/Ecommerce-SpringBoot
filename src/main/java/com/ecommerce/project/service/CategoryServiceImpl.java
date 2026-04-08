@@ -8,6 +8,7 @@ import com.ecommerce.project.payload.CategoryResponse;
 import com.ecommerce.project.repositories.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ public class CategoryServiceImpl implements CategoryService {
     private PaginationService paginationService;
 
     @Override
+    @Cacheable(
+            value = "CATEGORIES",
+            key = "#pageNumber + '_' + #pageSize + '_' + #sortBy + '_' + #sortOrder"
+    )
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize,
                                              String sortBy, String sortOrder) {
         Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
