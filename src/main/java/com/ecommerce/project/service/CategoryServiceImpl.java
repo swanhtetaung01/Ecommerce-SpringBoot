@@ -34,6 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
     )
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize,
                                              String sortBy, String sortOrder) {
+        System.out.println("Fetching from DB (NOT CACHE)");
         Pageable pageDetails = paginationService.getPageDetails(pageNumber, pageSize, sortBy, sortOrder);
         Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
         List<Category> categories = categoryPage.getContent();
