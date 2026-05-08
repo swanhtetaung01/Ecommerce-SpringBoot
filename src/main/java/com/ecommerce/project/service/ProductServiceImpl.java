@@ -131,7 +131,11 @@ public class ProductServiceImpl implements ProductService{
     @NonNull
     private ProductResponse getProductResponse(Integer pageNumber, Integer pageSize, Page<Product> productPage, List<Product> products) {
         List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .map(product -> {
+                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    productDTO.setImage(constructImageUrl(product.getImage()));
+                    return productDTO;
+                })
                 .toList();
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);

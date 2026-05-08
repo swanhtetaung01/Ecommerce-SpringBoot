@@ -79,8 +79,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/public/**").permitAll()
                                 //.requestMatchers("/api/admin/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                .anyRequest().authenticated());
+                                .requestMatchers("/images/**").permitAll()                                 .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
